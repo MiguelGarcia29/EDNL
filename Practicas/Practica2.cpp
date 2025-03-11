@@ -23,6 +23,7 @@ bool arbolSimilar(const Abin<T> &A, const Abin<T> &B)
 template <typename T>
 bool arbolSimilarRec(const Abin<T> &A, const Abin<T> &B, typename Abin<T>::nodo nA, typename Abin<T>::nodo nB)
 {
+    
     if (nA == A.NODO_NULO && nB != B.NODO_NULO)
         return false;
     else if (nA != A.NODO_NULO && nB == B.NODO_NULO)
@@ -39,13 +40,14 @@ Abin<T> arbolReflejao(const Abin<T> &A)
     assert(A.raiz() != A.NODO_NULO);
     Abin<T> ref;
     ref.insertarRaiz(A.elemento(A.raiz()));
-    arbolReflejaoRec(A, ref, A.raiz(),ref.raiz());
+    arbolReflejaoRec(A, ref, A.raiz(), ref.raiz());
     return ref;
 }
 
 template <typename T>
 void arbolReflejaoRec(const Abin<T> &A, Abin<T> &B, typename Abin<T>::nodo nA, typename Abin<T>::nodo nB)
 {
+    
     if (A.hijoIzqdo(nA) != A.NODO_NULO)
     {
         B.insertarHijoDrcho(nB, A.elemento(A.hijoIzqdo(nA)));
@@ -58,7 +60,38 @@ void arbolReflejaoRec(const Abin<T> &A, Abin<T> &B, typename Abin<T>::nodo nA, t
     }
 }
 
+template <typename T>
+int evaluarExpresion(const Abin<T> &A)
+{
 
+    return evaluarExpresionRec(A, A.raiz());
+}
+
+template <typename T>
+int evaluarExpresionRec(const Abin<T> &A, typename Abin<T>::nodo n)
+{
+
+    if (A.hijoIzqdo(n) == A.NODO_NULO && A.hijoDrcho(n) == A.NODO_NULO)
+    {
+        return A.elemento(n) - '0'; // TRANSFORMAR CHAR EN NUM
+    }
+
+    switch (A.elemento(n))
+    {
+    case '+':
+        return evaluarExpresionRec(A, A.hijoIzqdo(n)) + evaluarExpresionRec(A, A.hijoDrcho(n));
+        break;
+    case '-':
+        return evaluarExpresionRec(A, A.hijoIzqdo(n)) - evaluarExpresionRec(A, A.hijoDrcho(n));
+        break;
+    case '*':
+        return evaluarExpresionRec(A, A.hijoIzqdo(n)) * evaluarExpresionRec(A, A.hijoDrcho(n));
+        break;
+    case '/':
+        return evaluarExpresionRec(A, A.hijoIzqdo(n)) / evaluarExpresionRec(A, A.hijoDrcho(n));
+        break;
+    }
+}
 
 int main()
 {
@@ -89,5 +122,11 @@ int main()
     cout << "Arbol Reflejado A:";
     imprimirAbin(arbolReflejao(A));
     cout << "\n";
-
+    Abin<tElto> E;
+    ifstream ep("E.dat");
+    rellenarAbin(ep, E);
+    ep.close();
+    cout << "\n";
+    cout << "Operacion aritmetica E: "<<evaluarExpresion(E);
+    
 }
