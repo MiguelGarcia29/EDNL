@@ -2,236 +2,130 @@
 #define ABIN_CONVEC_H
 #include <cassert>
 #include <math.h>
+#include <iostream>
+using namespace std;
+
 template <typename T>
 class Abin
 {
-    struct celda; // declaraciÛn adelantada privada
 public:
-    typedef celda *nodo;
-    static const nodo NODO_NULO;
-    Abin(const char& v, const int ta); // constructor
-    void insertarRaiz();
-    void insertarHijoIzqdo(nodo n, const T &e);
-    //void insertarHijoDrcho(nodo n, const T &e);
-    //void eliminarHijoIzqdo(nodo n);
-    //void eliminarHijoDrcho(nodo n);
-    //void eliminarRaiz();
-    //bool vacio() const;
-    // const T &elemento(nodo n) const; // acceso a elto, lectura
-    // T &elemento(nodo n);             // acceso a elto, lectura/escritura
-    // nodo raiz() const;
-    nodo padre(nodo n) const;
-    // nodo hijoIzqdo(nodo n) const;
-    // nodo hijoDrcho(nodo n) const;
-    // int profNodo(nodo n) const;
-    // int altArbolNodo(nodo n) const;
-    // Abin(const Abin<T> &a);               // ctor. de copia
-    // Abin<T> &operator=(const Abin<T> &A); // asig.de ·rboles
-    // ~Abin();                              // destructor
-    
+    Abin(int t); // constructor
+    void insertarRaiz(const T &n);
+    const T &padre(const T &n) const;
+    void insertarHijoIzqdo(const T &n, const T &pad);
+    void insertarHijoDrcho(const T &n, const T &pad);
+    void verVector() const;
+    int obtenerP(const T &n);
+
+
 private:
-    struct celda
-    {
-        T elto;
-        nodo padre, hizq, hder;
-        celda(const T &e, nodo p = NODO_NULO) : elto(e), padre(p),
-                                                hizq(NODO_NULO), hder(NODO_NULO) {}
-    };
-    nodo r; // nodo raÌz del ·rbol
-    void destruirNodos(nodo &n);
-    nodo copiar(nodo n);
-    T* vec;
+    T *vec;
     int tam_;
     int alturaArbol() const;
+    int obtenerP_Rec(const T &n, int ini, int fin);
+    int posN(const T &x);
 };
 
-
-/* DefiniciÛn del nodo nulo */
 template <typename T>
-const typename Abin<T>::nodo Abin<T>::NODO_NULO(0);
-/*--------------------------------------------------------*/
-/* MÈtodos p˙blicos */
-/*--------------------------------------------------------*/
-template <typename T>
-inline Abin<T>::Abin(const char& v, const int ta) : vec(v),tam_(ta),r(NODO_NULO) {}
-template <typename T>
-inline void Abin<T>::insertarRaiz()
+inline Abin<T>::Abin(int t) : tam_(t)
 {
-    assert(r == NODO_NULO); // £rbol vacÌo
-     
-    r = new celda(vec[tam_/2]);
-}
+    vec = new T[tam_];
+    for (int i = 0; i < tam_; ++i)
+    {
+        vec[i]='-';
+    }
+};
+
 template <typename T>
-inline void Abin<T>::insertarHijoIzqdo(Abin<T>::nodo n, const T &e)
+inline void Abin<T>::insertarRaiz(const T &n)
 {
-    assert(n != NODO_NULO);
-    assert(n->hizq == NODO_NULO); // No existe hijo izqdo.
-    n->hizq = new celda(e, n);
-}
-// template <typename T>
-// inline void Abin<T>::insertarHijoDrcho(Abin<T>::nodo n, const T &e)
-// {
-//     assert(n != NODO_NULO);
-//     assert(n->hder == NODO_NULO); // No existe hijo drcho.
-//     n->hder = new celda(e, n);
-// }
-// template <typename T>
-// inline void Abin<T>::eliminarHijoIzqdo(Abin<T>::nodo n)
-// {
-//     assert(n != NODO_NULO);
-//     assert(n->hizq != NODO_NULO);        // Existe hijo izqdo.
-//     assert(n->hizq->hizq == NODO_NULO && // Hijo izqdo.
-//            n->hizq->hder == NODO_NULO);  // es hoja.
-//     delete n->hizq;
-//     n->hizq = NODO_NULO;
-// }
-
-// template <typename T>
-// inline void Abin<T>::eliminarHijoDrcho(Abin<T>::nodo n)
-// {
-//     assert(n != NODO_NULO);
-//     assert(n->hder != NODO_NULO);        // Existe hijo drcho.
-//     assert(n->hder->hizq == NODO_NULO && // Hijo drcho.
-//            n->hder->hder == NODO_NULO);  // es hoja
-//     delete n->hder;
-//     n->hder = NODO_NULO;
-// }
-// template <typename T>
-// inline void Abin<T>::eliminarRaiz()
-// {
-//     assert(r != NODO_NULO); // £rbol no vacÌo.
-//     assert(r->hizq == NODO_NULO &&
-//            r->hder == NODO_NULO); // La raÌz es hoja.
-//     delete r;
-//     r = NODO_NULO;
-// }
-// template <typename T>
-// inline bool Abin<T>::vacio() const
-// {
-//     return (r == NODO_NULO);
-// }
-// template <typename T>
-// inline const T &Abin<T>::elemento(Abin<T>::nodo n) const
-// {
-//     assert(n != NODO_NULO);
-//     return n->elto;
-// }
-// template <typename T>
-// inline T &Abin<T>::elemento(Abin<T>::nodo n)
-// {
-//     assert(n != NODO_NULO);
-//     return n->elto;
-// }
-// template <typename T>
-// inline typename Abin<T>::nodo Abin<T>::raiz() const
-// {
-//     return r;
-// }
- template <typename T>
- inline
-     typename Abin<T>::nodo
-     Abin<T>::padre(Abin<T>::nodo n) const
- {
-     assert(n != NODO_NULO);
-     return n->padre;
- }
-// template <typename T>
-// inline
-//     typename Abin<T>::nodo
-//     Abin<T>::hijoIzqdo(Abin<T>::nodo n) const
-// {
-//     assert(n != NODO_NULO);
-//     return n->hizq;
-// }
-// template <typename T>
-// inline
-//     typename Abin<T>::nodo
-//     Abin<T>::hijoDrcho(Abin<T>::nodo n) const
-// {
-//     assert(n != NODO_NULO);
-//     return n->hder;
-// }
-// template <typename T>
-// inline Abin<T>::Abin(const Abin<T> &A)
-// {
-//     r = copiar(A.r); // Copiar raÌz y descendientes.
-// }
-// template <typename T>
-// Abin<T> &Abin<T>::operator=(const Abin<T> &A)
-// {
-//     if (this != &A) // Evitar autoasignaciÛn.
-//     {
-//         this->~Abin();   // Vaciar el ·rbol.
-//         r = copiar(A.r); // Copiar raÌz y descendientes.
-//     }
-//     return *this;
-// }
-// template <typename T>
-// inline Abin<T>::~Abin()
-// {
-//     destruirNodos(r); // Vaciar el ·rbol.
-// }
-// /*--------------------------------------------------------*/
-// /* MÈtodos privados */
-// /*--------------------------------------------------------*/
-// // Destruye un nodo y todos sus descendientes
-// template <typename T>
-// void Abin<T>::destruirNodos(Abin<T>::nodo &n)
-
-// {
-//     if (n != NODO_NULO)
-//     {
-//         destruirNodos(n->hizq);
-//         destruirNodos(n->hder);
-//         delete n;
-//         n = NODO_NULO;
-//     }
-// }
-// // Devuelve una copia de un nodo y todos sus descendientes
-// template <typename T>
-// typename Abin<T>::nodo Abin<T>::copiar(Abin<T>::nodo n)
-// {
-//     nodo m = NODO_NULO;
-//     if (n != NODO_NULO)
-//     {
-//         m = new celda(n->elto);    // Copiar n.
-//         m->hizq = copiar(n->hizq); // Copiar sub·rbol izqdo.
-//         if (m->hizq != NODO_NULO)
-//             m->hizq->padre = m;
-//         m->hder = copiar(n->hder); // Copiar sub·rbol drcho.
-//         if (m->hder != NODO_NULO)
-//             m->hder->padre = m;
-//     }
-//     return m;
-// }
-
-// template <typename T>
-// inline int Abin<T>::profNodo(nodo n) const
-// {
-//     int prof=0;
-//     while(n!=r){
-//         prof += 1;
-//         n = n->padre;
-//     }
-//     return prof;
-// }
-
-// template <typename T>
-// inline int Abin<T>::altArbolNodo(nodo n) const
-// {
-//     if(n==r){
-//         return 0;
-//     }
-//     else if(n==NODO_NULO){
-//         return -1;
-//     }else{
-//         return 1 + std::max(altArbolNodo(n->hizq),altArbolNodo(n->hder));
-//     }
-// }
+    vec[tam_ / 2] = n;
+};
 
 template <typename T>
-inline int  Abin<T>::alturaArbol() const{
-    return log2(N+1) - 1
-}
+inline int Abin<T>::alturaArbol() const
+{
+    return log2(tam_ + 1) - 1;
+};
+
+template <typename T>
+int Abin<T>::obtenerP(const T &c)
+{
+
+    return obtenerP_Rec(c, 0, tam_);
+};
+
+template <typename T>
+inline int Abin<T>::obtenerP_Rec(const T &c, int ini, int fin)
+{
+
+    if (ini >= fin)
+        return 0;
+    int mid = ini + (fin - ini) / 2;
+    if (c == vec[mid])
+        return 0;
+
+    return 1 + obtenerP_Rec(c, ini, mid - 1) + obtenerP_Rec(c, mid + 1, fin);
+};
+
+template <typename T>
+inline void Abin<T>::insertarHijoIzqdo(const T &ins, const T &pad)
+{
+    int alt = alturaArbol();
+    int prof = obtenerP(pad);
+    int h = alt - prof;
+    int pos = posN(pad) - pow(2, h - 1);
+    vec[pos] = ins;
+};
+
+template <typename T>
+inline void Abin<T>::insertarHijoDrcho(const T &ins, const T &pad)
+{
+    int h = alturaArbol() - obtenerP(pad);
+    int pos = posN(pad) + pow(2, h - 1);
+    vec[pos] = ins;
+};
+
+template <typename T>
+inline const T &Abin<T>::padre(const T &n) const
+{
+    // compruebo si es hijo izq o derecho
+    int h = alturaArbol() - obtenerP(n);
+    if (posN(n) % pow(2, h + 2) == pow(2, h) - 1)
+    {
+        return vec[posN(n) + pow(2, h)];
+    }
+    else
+    {
+        return vec[posN(n) - pow(2, h)];
+    }
+};
+
+template <typename T>
+inline int Abin<T>::posN(const T &x)
+{
+    int pos = 0;
+    bool encontrado = false;
+    for (int i = 0; i < tam_ && !encontrado; ++i)
+    {
+        if (vec[i] == x)
+        {
+            pos = i;
+            encontrado = true;
+        }
+    }
+
+    return pos;
+};
+
+template <typename T>
+inline void Abin<T>::verVector() const
+{
+
+    for (int i = 0; i < tam_; ++i)
+    {
+        cout << " " << vec[i];
+    }
+};
 
 #endif // ABIN_H
