@@ -15,15 +15,13 @@ public:
     void insertarHijoIzqdo(const T &n, const T &pad);
     void insertarHijoDrcho(const T &n, const T &pad);
     void verVector() const;
-    int obtenerP(const T &n);
-
+    int obtenerP(int pos);
 
 private:
     T *vec;
     int tam_;
     int alturaArbol() const;
-    int obtenerP_Rec(const T &n, int ini, int fin);
-    int posN(const T &x);
+    int posN(const T &c);
 };
 
 template <typename T>
@@ -32,7 +30,7 @@ inline Abin<T>::Abin(int t) : tam_(t)
     vec = new T[tam_];
     for (int i = 0; i < tam_; ++i)
     {
-        vec[i]='-';
+        vec[i] = '-';
     }
 };
 
@@ -48,41 +46,52 @@ inline int Abin<T>::alturaArbol() const
     return log2(tam_ + 1) - 1;
 };
 
+//PROMT DE CHATGPT: dado un numero i tienes que hacer un programa que cree un vector de 0 a un tamaño dado y cuente cuantas iteraciones necesitaria de manera bicotomica para encontrar ese numeros
 template <typename T>
-int Abin<T>::obtenerP(const T &c)
+int Abin<T>::obtenerP(int i)
 {
+    int size = tam_;
+    int left = 0, right = size - 1;
+    int iterations = -1; //PARA QUE EL RAIZ SEA PROF 0
 
-    return obtenerP_Rec(c, 0, tam_);
-};
+    while (left <= right)
+    {
+        iterations++;
+        int mid = left + (right - left) / 2;
 
-template <typename T>
-inline int Abin<T>::obtenerP_Rec(const T &c, int ini, int fin)
-{
-
-    if (ini >= fin)
-        return 0;
-    int mid = ini + (fin - ini) / 2;
-    if (c == vec[mid])
-        return 0;
-
-    return 1 + obtenerP_Rec(c, ini, mid - 1) + obtenerP_Rec(c, mid + 1, fin);
+        if (mid == i)
+        {
+            return iterations;
+        }
+        else if (mid > i)
+        {
+            right = mid - 1;
+        }
+        else
+        {
+            left = mid + 1;
+        }
+    }
+    return iterations; // No debería ocurrir en este caso
 };
 
 template <typename T>
 inline void Abin<T>::insertarHijoIzqdo(const T &ins, const T &pad)
 {
     int alt = alturaArbol();
-    int prof = obtenerP(pad);
+    int posPad = posN(pad);
+    int prof = obtenerP(posPad);
     int h = alt - prof;
-    int pos = posN(pad) - pow(2, h - 1);
+    int pos = posPad - pow(2, h - 1);
     vec[pos] = ins;
 };
 
 template <typename T>
 inline void Abin<T>::insertarHijoDrcho(const T &ins, const T &pad)
 {
-    int h = alturaArbol() - obtenerP(pad);
-    int pos = posN(pad) + pow(2, h - 1);
+    int posPad = posN(pad);
+    int h = alturaArbol() - obtenerP(posPad);
+    int pos = posPad + pow(2, h - 1);
     vec[pos] = ins;
 };
 
