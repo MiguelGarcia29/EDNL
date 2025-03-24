@@ -94,6 +94,81 @@ int alturaArbolRec(const Agen<T> &A, typename Agen<T>::nodo n)
     return altura;
 }
 
+template <typename T>
+int alturaMinArbol(const Agen<T> &A)
+{
+    int altura = 1;
+    if (A.hijoIzqdo(A.raiz()) != A.NODO_NULO)
+    {
+        altura += 1 + alturaMinArbolRec(A, A.hijoIzqdo(A.raiz()));
+    }
+    return altura;
+}
+
+template <typename T>
+int alturaMinArbolRec(const Agen<T> &A, typename Agen<T>::nodo n)
+{
+
+    if (n == A.NODO_NULO)
+        return 0;
+
+    int altura = 1;
+    if (A.hijoIzqdo(n) != A.NODO_NULO)
+        altura += alturaMinArbolRec(A, A.hijoIzqdo(n));
+
+    typename Agen<T>::nodo hermano = A.hermDrcho(n);
+    while (hermano != A.NODO_NULO)
+    {
+        if (A.hijoIzqdo(hermano) != A.NODO_NULO)
+        {
+            altura = min(altura, alturaMinArbolRec(A, A.hijoIzqdo(hermano)));
+        }
+        hermano = A.hermDrcho(hermano);
+    }
+
+    return altura;
+}
+
+template <typename T>
+int desequilibrio(const Agen<T> &A)
+{
+    return (alturaArbol(A) - 1) - (alturaMinArbol(A) - 1);
+}
+
+template <typename T>
+void podarArbol(Agen<T> A, typename Agen<T>::nodo n)
+{
+    podarArbolRec(A, n);
+    if (n == A.raiz())
+    {
+        A.eliminarRaiz();
+    }
+    else if (n == A.hijoIzqdo(A.padre(n)))
+    {
+        A.eliminarHijoIzqdo(A.padre(n));
+    }
+    else
+    { // SI NO ES HERMANO DRCHO DE UN NODO
+        bool elimado = false;
+        typename Agen<T>::nodo hrmano = A.hijoIzqdo(A.padre(n));
+
+        while (A.hermDrcho(hrmano) != n) // AVANZO HASTA QUE EL HERMANO DEL NODO SEA N
+            hrmano = A.hermDrcho(hrmano);
+        A.eliminarHermDrcho(hrmano);
+    }
+}
+
+template <typename T>
+void podarArbolRec(Agen<T> A, typename Agen<T>::nodo n)
+{
+    while (A.hijoIzqdo(n) != A.NODO_NULO)
+    {
+        podarArbolRec(A, A.hijoIzqdo(n));
+        cout << A.elemento(A.hijoIzqdo(n));
+        A.eliminarHijoIzqdo(n);
+    }
+}
+
 int main()
 {
     Agen<tElto> B(16);
@@ -103,5 +178,10 @@ int main()
 
     cout << "Grado AGen: " << gradoAGen(B) << "\n";
     cout << "Profundida de nodo j: " << profNodo(B, B.hijoIzqdo(B.hermDrcho(B.hermDrcho(B.hijoIzqdo(B.hijoIzqdo(B.raiz())))))) << "\n";
-    cout << "Altura del arbol: " << alturaArbol(B);
+    cout << "Altura del arbol: " << alturaArbol(B) << "\n";
+    cout << "Rama mas cortas: " << alturaMinArbol(B) << "\n";
+    cout << "Desequilibrio: " << desequilibrio(B) << "\n";
+    cout << "PODANDO EL ARBOL ENTERO: ";
+    podarArbol(B, B.raiz());
+    imprimirAgen(B);
 }
