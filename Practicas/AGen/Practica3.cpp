@@ -161,12 +161,12 @@ void podarArbol(Agen<T> A, typename Agen<T>::nodo n)
 template <typename T>
 void podarArbolRec(Agen<T> A, typename Agen<T>::nodo n)
 {
-    while (A.hijoIzqdo(n) != A.NODO_NULO)
-    {
-        podarArbolRec(A, A.hijoIzqdo(n));
-        cout << A.elemento(A.hijoIzqdo(n));
-        A.eliminarHijoIzqdo(n);
-    }
+    if (n != A.NODO_NULO)
+        while (A.hijoIzqdo(n) != A.NODO_NULO)
+        {
+            podarArbolRec(A, A.hijoIzqdo(n));
+            A.eliminarHijoIzqdo(n);         //ME DA ERROR AL ELIMINAR H HABIENDOSE ELIMINADO J
+        }
 }
 
 int main()
