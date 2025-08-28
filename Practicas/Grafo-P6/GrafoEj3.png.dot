@@ -1,0 +1,9 @@
+graph G{
+	layout=neato;
+	rankdir=LR;
+	bgcolor=white;
+	graph [ dpi = 300, splines=false, overlap=false, sep="+8" ]; 
+
+	node [shape=circle, style=filled, fillcolor="#FFFFFF", fontcolor=black, fontsize=16, penwidth=3];
+	edge [color="#36454F", fontcolor=black, fontsize=16, style=solid, penwidth=2.5];
+}

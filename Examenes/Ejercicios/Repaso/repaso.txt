@@ -1,0 +1,8 @@
+Arbol:
+	Poda general de x, Poda arbol binario, Mirar el de los colores RESUELTO.
+Grafo:
+	Laberinto 3D, Fauno, Reparto, Puentes 2, Reconstruir ciudad.
+
+
+LEER TAD:     ---------------->
+	Abin, Agen, GrafoP, Abb, Apo.

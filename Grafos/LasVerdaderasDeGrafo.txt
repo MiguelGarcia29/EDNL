@@ -1,0 +1,38 @@
+Un recorrido en anchura desde un vértice origen permite encontrar el 
+conjunto de vértices de un componente conexo. 
+
+Al realizar el recorrido de un grafo es necesario ir marcando los nodos 
+visitados, excepto si el grafo es conexo y acíclico. 
+
+Se podría optimizar el algoritmo de Dijkstra usando un APO, en particular a la 
+hora de buscar el nodo más cercano al origen que todavía no ha sido usado 
+para mejorar a los demás.
+
+Ni Dijkstra ni Floyd funcionan correctamente con costes negativos, al contrario 
+que Prim y Kruskall.
+
+En un grafo no dirigido, los resultados devueltos por Dijkstra y Dijkstra inverso 
+aplicados al mismo nodo como origen y destino son iguales. 
+
+Ni Dijkstra ni Floyd funcionan correctamente con costes negativos, al contrario 
+que Prim y Kruskall. 
+
+En un grafo no dirigido, los resultados devueltos por Dijkstra y Dijkstra inverso 
+aplicados al mismo nodo como origen y destino son iguales. 
+
+Los resultados devueltos por Dijkstra y Dijkstra inverso son idénticos, siendo el 
+grafo no dirigido y tomando el mismo nodo como origen y destino. 
+
+Es muy importante escoger un valor de infinito que este fuera del rango de 
+valores de las operaciones aritméticas con costes que va a hacer, por ejemplo, 
+el algoritmo de Floyd o el de Dijkstra. En caso contrario no sirve. 
+
+
+
+
+Es necesario que Kruskall verifique que no se producen ciclos en la solución, lo 
+cual queda garantizado al seleccionar la arista de menor coste cuyos nodos 
+pertenecen a diferentes árboles. 
+
+Hemos utilizado un APO en la implementación de Prim y Kruskall para 
+seleccionar la arista candidata de menor coste en un tiempo O(1). 

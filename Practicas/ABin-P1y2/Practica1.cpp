@@ -54,7 +54,8 @@ int desequilibrioRec(const Abin<T>& A, typename Abin<T>::nodo n){
     if(n==A.NODO_NULO)
         return -1;
     else  
-        return max(abs(A.altArbolNodo(A.hijoIzqdo(n))-A.altArbolNodo(A.hijoDrcho(n))),max(desequilibrioRec(A,A.hijoIzqdo(n)),desequilibrioRec(A,A.hijoDrcho(n))));
+        return max(abs(A.altArbolNodo(A.hijoIzqdo(n))-A.altArbolNodo(A.hijoDrcho(n)))
+                ,max(desequilibrioRec(A,A.hijoIzqdo(n)),desequilibrioRec(A,A.hijoDrcho(n))));
 }
 
 template <typename T>

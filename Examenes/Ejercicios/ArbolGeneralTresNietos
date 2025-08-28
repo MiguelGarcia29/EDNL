@@ -1,0 +1,42 @@
+//Enunciado: Un nodo verde es aquel nodo que cumple una cierta codici´on, por ejemplo
+//en este caso, nuestra condici´on es aquel que tiene estrictamente 3 nietos.
+//Es decir, vamos a devolver el n´umero de nodos que tienen 3 en el ´arbol.
+
+
+//Enunciado: Un nodo verde es aquel nodo que cumple una cierta codici´on, por ejemplo
+//en este caso, nuestra condici´on es aquel que tiene estrictamente 3 nietos.
+//Es decir, vamos a devolver el n´umero de nodos que tienen 3 en el ´arbol.
+#include "Arboles/aGenCelEnLa.hpp"
+
+template <typename T>
+int nodosCon3Nietos(const Agen<T>& A){
+
+    int a = 0;
+    nodosCon3Nietos(A,&a,A.raiz());
+    return a;
+
+};
+
+template <typename T>
+void nodosCon3NietosRec(const Agen<T>& A,int& ctd, typename Agen<T>::nodo n){
+
+    if(n!=A.NODO_NULO){
+        int n = 0;
+        //COJO EL HIJO
+        typename Agen<T>::nodo hijo = A.hijoIzqdo(n);
+        while(hijo!=A.NODO_NULO){
+            nodosCon3NietosRec(A,ctd,hijo);
+            //MIRO SI LOS HIJOS TIENEN NIETOS
+            typename Agen<T>::nodo nieto = A.hijoIzqdo(hijo);
+            while(nieto!=A.NODO_NULO){
+                n++;
+                nieto=A.hermDrcho(nieto);
+            }
+            hijo = A.hermDrcho(hijo);
+        }
+        
+        if(n==3)
+            ctd++;
+    }
+    
+};
